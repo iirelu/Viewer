@@ -6,7 +6,20 @@
 </head>
 <body>
   <script>
-    //chesttextstest
+
+    function parseAddress(url) {
+      var parsedUrl = url.split("?")[1].split("#")[0],
+        variables = parsedUrl.split("&"),
+        parsedData = {};
+
+      for(var i = 0; i < variables.length; i++) {
+        var current = variables[i].split("=");
+        parsedData[current[0]] = current[1];
+      }
+
+      return parsedData;
+    }
+
   </script>
 </body>
 </html>
