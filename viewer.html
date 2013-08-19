@@ -8,15 +8,29 @@
   <script>
 
     function parseAddress(url) {
-      var parsedUrl = url.split("?")[1].split("#")[0],
-        variables = parsedUrl.split("&"),
-        parsedData = {};
+      var parsedUrl, parsedQuery, parsedFragment, parsedVariables, parsedData = {}, current;
 
-      for(var i = 0; i < variables.length; i++) {
-        var current = variables[i].split("=");
-        parsedData[current[0]] = current[1];
+      if(typeof url != "string") {
+        throw new TypeError("Invalid input");
       }
 
+      if(url.contains("?")) {
+        parsedQuery = url.split("?")[1] && url.split("?")[1].split("#")[0]; // i am not proud of this
+        parsedVariables = parsedQuery ? parsedQuery.split("&") : []; // edge cases like viewer.html?#
+
+        for(var i = 0; i < parsedVariables.length; i++) {
+          current = parsedVariables[i].split("=");
+          parsedData[current[0]] = current[1] || true;
+        }
+      }
+
+      if(url.contains("#")) {
+        parsedFragment = url.split("#")[1];
+        if(parsedFragment) {
+          parsedData["#"] = parsedFragment;
+        }
+      }
+      
       return parsedData;
     }
 
