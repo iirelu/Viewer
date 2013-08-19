@@ -3,9 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <title>Viewer</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+    body {
+      background-color: #121314;
+    }
+    .nav {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100px;
+      background-color: rgba(10, 12, 14, 0.3);
+      font-size: 5em;
+      text-align: center;
+      color: #DEDADF;
+    }
+    .nav:hover {
+      background-color: rgba(10, 12, 14, 0.8);
+    }
+    #back {
+      left: 0;
+    }
+    #forward {
+      right: 0;
+    }
+  </style>
 </head>
 <body>
   <script>
+
+    var imageManager;
 
     function parseAddress(url) {
       var parsedUrl, parsedQuery, parsedFragment, parsedVariables, parsedData = {}, current;
@@ -34,6 +64,40 @@
       return parsedData;
     }
 
+    imageManager = (function() {
+      var api = {}, currentImage = 0, totalImages = 0, images = {},
+        options = parseAddress(document.URL);
+
+      api.back = function(e) {
+        if(currentImage > 0) {
+          currentImage -= 1;
+        }
+        console.log("gone back");
+      }
+      api.forward = function(e) {
+        if(currentImage < totalImage) {
+          currentImage += 1;
+        }
+        console.log("gone forward");
+      }
+      return api;
+    }());
+
+    /*
+    document.getElementById("back").addEventListener("click", imageManager.back);
+    document.getElementById("forward").addEventListener("click", imageManager.forward);
+
+    // I HATE ADDEVENTLISTENER
+
+    document.addEventListener("keypress", imageManager.back);
+    document.addEventListener("keypress", imageManager.forward);
+    */
+    
+
   </script>
+
+  <div class="nav" id="back" onclick="imageManager.back()">«</div>
+  <div class="nav" id="forward" onclick="imageManager.forward()">»</div>
+  <div id="images"></div>
 </body>
 </html>
