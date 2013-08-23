@@ -8,6 +8,9 @@
       padding: 0;
       margin: 0;
     }
+    *::selection {
+      color: rgba(0, 0, 0, 0);
+    }
     body {
       background-color: #121314;
     }
@@ -30,6 +33,21 @@
     #forward {
       right: 0;
     }
+    #imageCentrer {
+      width: 100%;
+      height: 100%;
+      display: table;
+      position: absolute;
+      z-index: -1;
+    }
+    #images {
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+    }
+    .invisible {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -37,6 +55,7 @@
 
     var imageManager;
 
+    // url parsing
     function parseAddress(url) {
       var parsedUrl, parsedQuery, parsedFragment, parsedVariables, parsedData = {}, current;
 
@@ -64,40 +83,115 @@
       return parsedData;
     }
 
-    imageManager = (function() {
-      var api = {}, currentImage = 0, totalImages = 0, images = {},
-        options = parseAddress(document.URL);
+    function zeropad(num, length) {
+      var stringNum = num + "",
+        addedZeroes = length - stringNum.length;
 
-      api.back = function(e) {
-        if(currentImage > 0) {
-          currentImage -= 1;
-        }
-        console.log("gone back");
+      for(var i = 0; i < addedZeroes; i++) {
+        stringNum = "0" + stringNum;
       }
-      api.forward = function(e) {
-        if(currentImage < totalImage) {
-          currentImage += 1;
+      return stringNum;
+    }
+
+    // managing images
+    imageManager = (function() {
+      var api = {}, currentImageNumber = 0, totalImages = 0, imageNodes = [], imageAddresses;
+
+      // updating the image currently visible
+      function updateImages() {
+        if(!imageNodes[currentImageNumber]) {
+          imageNodes[currentImageNumber] = makeImage(imageAddresses[currentImageNumber]);
         }
-        console.log("gone forward");
+        for(var i in imageNodes) {
+          var image = imageNodes[i];
+
+          if(!image) continue; // sanity check
+
+          if(image.src == imageAddresses[currentImageNumber]) {
+            image.classList.remove("invisible");
+          } else {
+            image.classList.add("invisible");
+          }
+        }
       }
+
+      // updating the buttons that are visible
+      function updateButtons() {
+        if(currentImageNumber == 0) {
+          document.getElementById("back").classList.add("invisible");
+        } else {
+          document.getElementById("back").classList.remove("invisible");
+        }
+
+        if(currentImageNumber == totalImages - 1) {
+          document.getElementById("forward").classList.add("invisible");
+        } else {
+          document.getElementById("forward").classList.remove("invisible");
+        }
+      }
+
+      // making new images
+      function makeImage(src) {
+        var newImage = document.createElement("img");
+        newImage.src = src;
+        newImage.alt = "";
+        document.getElementById("images").appendChild(newImage);
+        return newImage;
+      }
+
+      // going back and forwards
+      api.back = function() {
+        if(currentImageNumber > 0) {
+          currentImageNumber -= 1;
+          updateImages();
+        }
+        updateButtons()
+      }
+      api.forward = function() {
+        if(currentImageNumber < totalImages - 1) {
+          currentImageNumber += 1;
+          updateImages();
+        }
+        updateButtons();
+      }
+
+      // setters and getters
+      api.setImageAddresses = function(images) {
+        imageAddresses = images;
+        totalImages = images.length;
+        updateImages();
+        updateButtons();
+      }
+      api.currentImage = function(number) {
+        if(number) {
+          currentImageNumber = number;
+        } else {
+          return currentImageNumber;
+        }
+      }
+
       return api;
     }());
 
-    /*
-    document.getElementById("back").addEventListener("click", imageManager.back);
-    document.getElementById("forward").addEventListener("click", imageManager.forward);
+    /*function init() {
+      var options = parseAddress(document.URL), allImages = [];
 
-    // I HATE ADDEVENTLISTENER
+      if(options.structure && options.number)
+    }*/
 
-    document.addEventListener("keypress", imageManager.back);
-    document.addEventListener("keypress", imageManager.forward);
-    */
+    document.addEventListener("mouseup", unselect);
+
+    function unselect(e) {
+      window.getSelection().removeAllRanges();
+    }
     
 
   </script>
 
   <div class="nav" id="back" onclick="imageManager.back()">«</div>
   <div class="nav" id="forward" onclick="imageManager.forward()">»</div>
-  <div id="images"></div>
+  <div id="imageCentrer">
+    <div id="images"></div>
+  </div>
 </body>
 </html>
