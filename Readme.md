@@ -4,10 +4,10 @@ Location of viewer.html:
 `example.com/folder/viewer.html`
 
 Get images "Images/Screenshot100.png" and "Images/Screenshots101.png"
-`viewer.html?structure=Images/Screenshot_.png&numbers=100_101` 
+`viewer.html?structure=Images/Screenshot_.png&number=100_101` 
 
 Get spaaaacce2/scr00010.png, spaaaacce2/scr00011.png, ...etc..., spaaaacce2/scr00020.png
-`viewer.html?structure=spaaaacce2/scr_____.png&numbers=10__20`
+`viewer.html?structure=spaaaacce2/scr_____.png&number=10__20`
 
 ## URL structure
 

@@ -173,11 +173,30 @@
       return api;
     }());
 
-    /*function init() {
-      var options = parseAddress(document.URL), allImages = [];
+    function init() {
+      var options = parseAddress(document.URL), allImages = [], blankLength, structure, numbers, i;
 
-      if(options.structure && options.number)
-    }*/
+      if(options.structure && options.number) {
+        // do magic here please
+        blankLength = options.structure.lastIndexOf("_") - options.structure.indexOf("_") + 1;
+        structure = options.structure.split("_");
+        structure = [structure[0], structure[structure.length - 1]];
+
+        numbers = options.number.split("_");
+        if(numbers[1] === "") { // checks if there are two underscores in a row
+          for(i = numbers[0] * 1; i <= numbers[2] * 1; i++) {
+            allImages.push(structure[0] + zeropad(i, blankLength) + structure[1]);
+          }
+        }
+        //
+      } else if(options.structure) {
+        allImages[0] = options.structure; // no slideshow
+      } else {
+        allImages[0] = "https://dl.dropboxusercontent.com/u/116868474/badurl.png"; // bad url :c
+      }
+
+      imageManager.setImageAddresses(allImages)
+    }
 
     document.addEventListener("mouseup", unselect);
 
