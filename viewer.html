@@ -50,7 +50,7 @@
     }
   </style>
 </head>
-<body>
+<body onload="init()">
   <script>
 
     var imageManager;
@@ -107,7 +107,7 @@
 
           if(!image) continue; // sanity check
 
-          if(image.src == imageAddresses[currentImageNumber]) {
+          if(image.src.contains(imageAddresses[currentImageNumber])) {
             image.classList.remove("invisible");
           } else {
             image.classList.add("invisible");
@@ -207,8 +207,8 @@
 
   </script>
 
-  <div class="nav" id="back" onclick="imageManager.back()">«</div>
-  <div class="nav" id="forward" onclick="imageManager.forward()">»</div>
+  <div class="nav" id="back" onclick="imageManager.back()">&#x00ab;</div>
+  <div class="nav" id="forward" onclick="imageManager.forward()">&#x00bb;</div>
   <div id="imageCentrer">
     <div id="images"></div>
   </div>
