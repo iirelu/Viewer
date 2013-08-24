@@ -134,6 +134,32 @@
         }
       }
 
+      // making the images fit the screen
+      function resize() {
+        var pageWidth = window.innerWidth, pageHeight = window.innerHeight,
+          image = imageNodes[currentImageNumber],
+          imageWidth, imageHeight, ratio;
+
+        imageWidth = image.naturalWidth;
+        imageHeight = image.naturalHeight;
+        ratio = imageWidth / imageHeight;
+
+        if(!imageWidth || !imageHeight) return; // making sure morning happens before the image loads
+
+        if(imageWidth > pageWidth - 20 || imageHeight > pageHeight - 20) { // if image doesnt fit
+          if(pageWidth / pageHeight <= imageWidth / imageHeight) {
+            image.width = pageWidth - 20;
+            image.height = (pageWidth - 20) / ratio;
+          } else {
+            image.height = pageHeight - 20;
+            image.width = (pageHeight - 20) * ratio;
+          }
+        } else {
+          image.width = imageWidth;
+          image.height = imageHeight;
+        }
+      }
+
       // making new images
       function makeImage(src) {
         var newImage = document.createElement("img");
@@ -148,13 +174,15 @@
         if(currentImageNumber > 0) {
           currentImageNumber -= 1;
           updateImages();
+          resize();
         }
-        updateButtons()
+        updateButtons();
       }
       api.forward = function() {
         if(currentImageNumber < totalImages - 1) {
           currentImageNumber += 1;
           updateImages();
+          resize();
         }
         updateButtons();
       }
@@ -168,6 +196,7 @@
         }
         updateImages();
         updateButtons();
+        resize();
       }
       api.currentImage = function(number) {
         if(number * 1) {
@@ -176,6 +205,8 @@
           return currentImageNumber;
         }
       }
+
+      api.resize = resize;
 
       return api;
     }());
@@ -209,6 +240,7 @@
       document.getElementById("forward").addEventListener("click", imageManager.forward);
 
       document.addEventListener("keydown", keyHandler);
+      window.addEventListener("resize", imageManager.resize);
 
       function keyHandler(e) {
         var key = e.keyCode;
