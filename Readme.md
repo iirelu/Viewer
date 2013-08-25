@@ -1,18 +1,22 @@
-## URL examples
+# Viewer
 
-Location of viewer.html:
-`example.com/folder/viewer.html`
+Viewer is a small webapp for viewing slideshows that runs entirely off of a single static html file. The images to display are set via the URL.
 
-Get images "Images/Screenshot100.png" and "Images/Screenshots101.png"
-`viewer.html?structure=Images/Screenshot_.png&number=100_101` 
+## URL options
 
-Get spaaaacce2/scr00010.png, spaaaacce2/scr00011.png, ...etc..., spaaaacce2/scr00020.png
-`viewer.html?structure=spaaaacce2/scr_____.png&number=10__20`
+### "structure"
+The structure of the URL, can be a single image URL or a URL with underscores to be filled by the "number" option.
 
-## URL structure
+### "number"
+If the structure has a blank space, the number or numbers here will fill it. Can be a single number, a series of numbers seperated by single underscores, or a series of numbers.
 
-### structure
-Regular URLs are valid, for example "folder/image.png", however underscores can be used as "blanks" to be filled by the number value
+### URL fragment
+Sets the image Viewer starts off with.
 
-### number
-The value of number fills the blanks in the structure. It can be a number, like "30", or a series of numbers, like "10__20" for 10, 11, ...etc..., 20, or it could be multiple numbers, like "4_8_9" for 4, 8, and 9.
+## Example URLs
+
+Show these images in the Screenshots folder: Image000010.png, Image000120.png, Image000013.png
+`viewer.html?structure=Screenshots/Image______.png&number=10_120_13`
+
+Show these images in the camera folder: pic1.jpg, pic2.jpg, pic3.jpg, ..etc.., pic15.jpg
+`viewer.html?structure=camera/pic_.jpg&number=1__15`
