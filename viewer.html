@@ -60,9 +60,10 @@
 
     // url parsing
     function parseAddress(url) {
-      var parsedUrl, parsedQuery, parsedFragment, parsedVariables, parsedData = {}, current;
+      "use strict";
+      var parsedQuery, parsedFragment, parsedVariables, parsedData = {}, current;
 
-      if(typeof url != "string") {
+      if(typeof url !== "string") {
         throw new TypeError("Invalid input");
       }
 
@@ -87,6 +88,7 @@
     }
 
     function zeropad(num, length) {
+      "use strict";
       var stringNum = num + "",
         addedZeroes = length - stringNum.length;
 
@@ -98,6 +100,7 @@
 
     // managing images
     imageManager = (function() {
+      "use strict";
       var api = {}, currentImageNumber = 0, totalImages = 0, imageNodes = [], imageAddresses;
 
       // updating the image currently visible
@@ -105,29 +108,35 @@
         if(!imageNodes[currentImageNumber]) {
           imageNodes[currentImageNumber] = makeImage(imageAddresses[currentImageNumber]);
         }
+
         for(var i in imageNodes) {
-          var image = imageNodes[i];
+          if(imageNodes.hasOwnProperty(i)) {
 
-          if(!image) continue; // sanity check
+            var image = imageNodes[i];
 
-          if(image.src.contains(imageAddresses[currentImageNumber])) {
-            image.classList.remove("invisible");
-          } else {
-            image.classList.add("invisible");
+            if(!image) { continue; } // sanity check
+
+            if(image.src.contains(imageAddresses[currentImageNumber])) {
+              image.classList.remove("invisible");
+            } else {
+              image.classList.add("invisible");
+            }
+
           }
         }
+
         window.location.hash = currentImageNumber;
       }
 
       // updating the buttons that are visible
       function updateButtons() {
-        if(currentImageNumber == 0) {
+        if(currentImageNumber === 0) {
           document.getElementById("back").classList.add("invisible");
         } else {
           document.getElementById("back").classList.remove("invisible");
         }
 
-        if(currentImageNumber == totalImages - 1) {
+        if(currentImageNumber === totalImages - 1) {
           document.getElementById("forward").classList.add("invisible");
         } else {
           document.getElementById("forward").classList.remove("invisible");
@@ -144,7 +153,7 @@
         imageHeight = image.naturalHeight;
         ratio = imageWidth / imageHeight;
 
-        if(!imageWidth || !imageHeight) return; // making sure morning happens before the image loads
+        if(!imageWidth || !imageHeight) { return; } // making sure morning happens before the image loads
 
         if(imageWidth > pageWidth - 20 || imageHeight > pageHeight - 20) { // if image doesnt fit
           if(pageWidth / pageHeight <= imageWidth / imageHeight) {
@@ -177,7 +186,7 @@
           resize();
         }
         updateButtons();
-      }
+      };
       api.forward = function() {
         if(currentImageNumber < totalImages - 1) {
           currentImageNumber += 1;
@@ -185,7 +194,7 @@
           resize();
         }
         updateButtons();
-      }
+      };
 
       // setters and getters
       api.setImageAddresses = function(images) {
@@ -197,14 +206,14 @@
         updateImages();
         updateButtons();
         resize();
-      }
+      };
       api.currentImage = function(number) {
         if(number * 1) {
           currentImageNumber = number;
         } else {
           return currentImageNumber;
         }
-      }
+      };
 
       api.resize = resize;
 
@@ -212,6 +221,7 @@
     }());
 
     function init() {
+      "use strict";
       var options = parseAddress(document.URL), allImages = [], blankLength, structure, numbers, i;
 
       if(options.structure && options.number) {
@@ -225,11 +235,13 @@
           for(i = numbers[0] * 1; i <= numbers[2] * 1; i++) {
             allImages.push(structure[0] + zeropad(i, blankLength) + structure[1]);
           }
+
         } else if(numbers[1] && numbers.length >= 2) { // if there is only one underscore in a row
           for(i = 0; i < numbers.length; i++) {
             allImages.push(structure[0] + zeropad(numbers[i], blankLength) + structure[1]);
           }
-        } else if(numbers.length = 1) {
+
+        } else if(numbers.length === 1) {
           allImages = [ structure[0] + zeropad(numbers[0], blankLength) + structure[1] ];
         }
 
@@ -250,21 +262,19 @@
 
       function keyHandler(e) {
         var key = e.keyCode;
-        if(key == 37 || key == 65) { // left arrow or A
+        if(key === 37 || key === 65) { // left arrow or A
           imageManager.back();
-        } else if(key == 39 || key == 68) { // right arrow or D
+        } else if(key === 39 || key === 68) { // right arrow or D
           imageManager.forward();
         }
       }
 
       document.addEventListener("mouseup", unselect);
 
-      function unselect(e) {
+      function unselect() {
         window.getSelection().removeAllRanges();
       }
     }
-
-    
 
   </script>
 
