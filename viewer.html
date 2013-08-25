@@ -215,18 +215,24 @@
       var options = parseAddress(document.URL), allImages = [], blankLength, structure, numbers, i;
 
       if(options.structure && options.number) {
-        // do magic here please
+
         blankLength = options.structure.lastIndexOf("_") - options.structure.indexOf("_") + 1;
         structure = options.structure.split("_");
         structure = [structure[0], structure[structure.length - 1]];
 
         numbers = options.number.split("_");
-        if(numbers[1] === "") { // checks if there are two underscores in a row
+        if(numbers[1] === "") { // if there are two underscores in a row
           for(i = numbers[0] * 1; i <= numbers[2] * 1; i++) {
             allImages.push(structure[0] + zeropad(i, blankLength) + structure[1]);
           }
+        } else if(numbers[1] && numbers.length >= 2) { // if there is only one underscore in a row
+          for(i = 0; i < numbers.length; i++) {
+            allImages.push(structure[0] + zeropad(numbers[i], blankLength) + structure[1]);
+          }
+        } else if(numbers.length = 1) {
+          allImages = [ structure[0] + zeropad(numbers[0], blankLength) + structure[1] ];
         }
-        //
+
       } else if(options.structure) {
         allImages[0] = options.structure; // no slideshow
       } else {
