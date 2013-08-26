@@ -2,6 +2,10 @@
 
 Viewer is a small webapp for viewing slideshows that runs entirely off of a single static html file. The images to display are set via the URL, using the query and the fragment.
 
+It is designed to be placed somewhere you are allowed to store static content, but not allowed to do anything dynamic. For example, you can put it in the Public folder of your Dropbox.
+
+[An example of what Viewer looks like in action.](http://iirelu.github.io/Viewer/viewer.html?structure=Examples/____.jpg&number=1__10)
+
 ## URL options
 
 ### "structure"
